@@ -8,9 +8,10 @@ const sliderContainer = document.getElementById('sliders');
 
 const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
+// input field empty warning message
+
 // Enter key pressed
 document.getElementById("search").addEventListener("keypress", function(event) {
-  //event.preventDefault();
   if (event.key === 'Enter') {
       document.getElementById("search-btn").click();
   }
@@ -34,11 +35,19 @@ const showImages = (images) => {
 }
 
 const getImages = (query) => {
-  toggleSpinner();
-  fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
+  
+  if (document.getElementById('search').value === '') {
+    displayError('Please type your query');
+  }
+  else {
+    fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
     .catch(err => console.log(err))
+    document.getElementById('search').value = '';
+    toggleSpinner();
+    errorMessage.innerHTML = '';
+  }
 }
 
 // toggle spinner
@@ -52,18 +61,13 @@ const toggleSpinner = () => {
 let sliders = [];
 let slideIndex = 0;
 const selectItem = (event, img) => {
-  console.log(sliders);
   let element = event.target;
-  // element.classList.add('added');
   element.classList.toggle('added');
  
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
   } else {
-    // alert('Hey, Already added !')
-    
-    // element.classList.toggle('added');
     sliders.splice(item,1);
   }
 }
@@ -93,8 +97,9 @@ const createSlider = () => {
 
   sliderContainer.appendChild(prevNext)
   document.querySelector('.main').style.display = 'block';
-  // hide image aria
+  // hide image area
   imagesArea.style.display = 'none';
+
   const duration = document.getElementById('duration').value || 1000;
   sliders.forEach(slide => {
     let item = document.createElement('div')
@@ -148,3 +153,9 @@ searchBtn.addEventListener('click', function () {
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
+
+// display error
+const displayError = error => {
+  const errorTag = document.getElementById('errorMessage');
+  errorTag.innerText = error;
+}
