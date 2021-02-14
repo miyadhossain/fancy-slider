@@ -4,13 +4,8 @@ const galleryHeader = document.querySelector('.gallery-header');
 const searchBtn = document.getElementById('search-btn');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
-// selected image 
-let sliders = [];
 
 
-// If this key doesn't work
-// Find the name in the url and go to their website
-// to create your own api key
 const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
 // Enter key pressed
@@ -53,28 +48,34 @@ const toggleSpinner = () => {
   spinner.classList.toggle('d-none');
   ImgContainer.classList.toggle('d-none');
 }
-
+// selected image 
+let sliders = [];
 let slideIndex = 0;
 const selectItem = (event, img) => {
+  console.log(sliders);
   let element = event.target;
-  element.classList.add('added');
+  // element.classList.add('added');
+  element.classList.toggle('added');
  
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
   } else {
-    alert('Hey, Already added !')
+    // alert('Hey, Already added !')
+    
+    // element.classList.toggle('added');
+    sliders.splice(item,1);
   }
 }
 
 // duration can not be negative
-const posistiveNumberOnly = input => {
+const positiveNumberOnly = input => {
   let regex = /[^0-9]/gi;
   input.value = input.value.replace(regex, '');
 }
 
 
-var timer;
+let timer = 0;
 const createSlider = () => {
   // check slider image length
   if (sliders.length < 2) {
